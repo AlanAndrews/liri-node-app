@@ -13,10 +13,8 @@ var keys = require("./keys.js");
 var twitter = require('twitter');
 var client = new twitter(keys.twitter);
 var Spotify = require('node-spotify-api');
-var spotify = new Spotify({
-    id: "85bc4f9807fe43418b51de7a79944702",
-    secret: "7792434793704cffb03b53c455c5e3aa"
-});
+var spotify = new Spotify(keys.spotify)
+
 
 
 
@@ -28,7 +26,11 @@ switch(command){
 
     case "spotify-this-song":
     spotifySong();
-    break
+    break;
+
+    case "movie-this":
+    searchMovie();
+    break;
 }
 
 function myTweets(){
@@ -61,6 +63,7 @@ function myTweets(){
 
 function spotifySong(){
     // var trackSearch = search.text
+    // could eventually make the search capabilities more robust by concatenating process.argv[2] + process.argv[3]
     var searchTrack;
     if(search === undefined) {
         searchTrack = "The sign";
@@ -87,4 +90,6 @@ function spotifySong(){
       }
     });
 };
+
+
 
