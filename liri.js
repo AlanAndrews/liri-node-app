@@ -13,10 +13,8 @@ var keys = require("./keys.js");
 var twitter = require('twitter');
 var client = new twitter(keys.twitter);
 var Spotify = require('node-spotify-api');
-var spotify = new Spotify(keys.spotify)
-
-
-
+var spotify = new Spotify(keys.spotify);
+var request = require('request');
 
 // switch-case allows certain blocks of code to be specified based on a condtion/command in node 
 switch(command){
@@ -30,6 +28,10 @@ switch(command){
 
     case "movie-this":
     searchMovie();
+    break;
+
+    case "do-what-it-says":
+    doWhat();
     break;
 }
 
@@ -50,7 +52,7 @@ function myTweets(){
     });
   }
 
-// code block for my-tweets command based on twitter npm documentation
+// FIRST TRY. code block for my-tweets command based on twitter npm documentation
 // function myTweets() {
 // var params = {screen_name: 'BootcampUt'};
 
@@ -64,12 +66,12 @@ function myTweets(){
 function spotifySong(){
     // var trackSearch = search.text
     // could eventually make the search capabilities more robust by concatenating process.argv[2] + process.argv[3]
-    var searchTrack;
+        var searchTrack;
     if(search === undefined) {
         searchTrack = "The sign";
     } else {
         searchTrack = search;
-    }
+    } //using npm structure as guide
     spotify.search({ 
         type: 'track', 
         query: searchTrack}, function(err, data){
@@ -91,5 +93,32 @@ function spotifySong(){
     });
 };
 
+function searchMovie(){
+    var movieTitle;
+    if(search === undefined) {
+        movieTitle = "Mr Nobody";
+    } else {
+        movieTitle = search;
+    }
+    console.log(movieTitle)
 
+request("http://www.omdbapi.com/?t=" + movieTitle + "&plot=short&apikey=trilogy", function(error, response, body) {
+    if (!error && response.statusCode === 200) {
+        // console.log(JSON.parse(body));
+        console.log("Title of the movie: " + JSON.parse(body).Title);
+        console.log("Year the movie came out: " + JSON.parse(body).Year);
+        console.log("IMDB Rating of the movie: " + JSON.parse(body).imdbRating);
+        console.log("Rotten Tomatoes Rating of the movie: " + JSON.parse(body).tomatoRating);
+        console.log("Country where the movie was produced: " + JSON.parse(body).Country);
+        console.log("Language of the movie: " + JSON.parse(body).Language);
+        console.log("Plot of the movie: " + JSON.parse(body).Plot);
+        console.log("Actors in the movie: " + JSON.parse(body).Actors);
+    }
 
+});
+}
+
+function doWhat(){};
+
+// Need to make search more robust by allowing multiple arguments to be input
+// need to complete fs require.
